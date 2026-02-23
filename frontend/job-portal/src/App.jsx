@@ -16,7 +16,7 @@ import AdminDashboard from "./pages/Admin/AdminDashboard";
 import JobPostingForm from "./pages/Admin/JobPostingForm";
 import ManageJobs from "./pages/Admin/ManageJobs";
 import ApplicationViewer from "./pages/Admin/ApplicationViewer";
-import AdminProfilePage from "./pages/Admin/AdminProfilePage";
+import CompanyProfilePage from "./pages/Admin/CompanyProfilePage";
 import ProtectedRoute from "./routes/ProtectedRoute";
 
 function App() {
@@ -38,7 +38,7 @@ function App() {
             <Route path="/post-jobs" element={<JobPostingForm />} />
             <Route path="/manage-jobs" element={<ManageJobs />} />
             <Route path="/applicants" element={<ApplicationViewer />} />
-            <Route path="/admin-profile" element={<AdminProfilePage />} />
+            <Route path="/company-profile" element={<CompanyProfilePage />} />
 
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
