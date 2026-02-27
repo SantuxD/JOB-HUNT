@@ -9,6 +9,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { useState } from "react";
+import { validateEmail } from "../../utils/helper";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -23,18 +24,13 @@ const Login = () => {
     success: false,
   });
 
-  const validateEmail = (email) => {
-    if (!email.trim()) return "Email is required.";
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) return "Please enter a valid email address.";
-
-    return "";
-  };
+ 
   const validatePassword = (password) => {
     if (!password.trim()) return "Password is required.";
 
     return "";
   };
+
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
 
@@ -42,7 +38,18 @@ const Login = () => {
       ...prevData,
       [name]: type === "checkbox" ? checked : value,
     }));
+
+    if (formState.error[name]) {
+      setFormState((prevState) => ({
+        ...prevState,
+        error: {
+          ...prevState.error,
+          [name]: "",
+        },
+      }));
+    }
   };
+
   const validateForm = () => {
     const errors = {
       email: validateEmail(formData.email),
@@ -63,6 +70,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!validateForm()) {
       return;
     }
@@ -84,6 +92,7 @@ const Login = () => {
     }
     // Simulate API call
   };
+
   if (formState.success) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
