@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { validateEmail } from "../../utils/helper";
+import { validatePassword } from "../../utils/helper";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -23,13 +24,6 @@ const Login = () => {
     showpassword: false,
     success: false,
   });
-
- 
-  const validatePassword = (password) => {
-    if (!password.trim()) return "Password is required.";
-
-    return "";
-  };
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -219,18 +213,6 @@ const Login = () => {
             )}
           </div>
 
-          {/* <div className="">
-            <label className="">
-              <input
-                type="checkbox"
-                name="rememberMe"
-                checked={formData.rememberMe}
-                onChange={handleInputChange}
-                className=""
-              />
-              Remember me
-            </label>
-          </div> */}
           <button
             type="submit"
             className=" w-full bg-linear-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 "
