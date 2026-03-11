@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema(
     resume: {
       type: String,
     },
-    compantName: String,
+    companyName: String,
     companyDescription: String,
     companyLogo: String,
   },
