@@ -3,10 +3,10 @@ const userModal = require("../models/User.modals");
 const ApplicationModal = require("../models/Application.modals");
 const savedJobModal = require("../models/SavedJob.modals");
 const jwt = require("jsonwebtoken");
+const ApplicationModals = require("../models/Application.modals");
 
 const createJobs = async (req, res) => {
   try {
-
     if (req.user.role !== "admin") {
       return res.status(403).json({
         message: "only admin can post the job" + err.message,
@@ -86,8 +86,72 @@ const getJobs = async (req, res) => {
   }
 };
 
+const getJobsAdmin = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { role } = req.user;
+
+    if (!req.user) {
+      return res.status(401).json({
+        message: "Unauthorized",
+      });
+    }
+
+    if (!role == "admin") {
+      return res.status(403).json({
+        message: "Acess denied",
+      });
+    }
+
+    const jobs = await jobModal
+      .find({ company: userId })
+      .populate("company", "name companyName companyLogo")
+      .lean();
+    const jobWithApplicationsCount = await Promise.all(
+      jobs.map(async (job) => {
+        const applicationCount = await ApplicationModal.countDocuments({
+          job: job._id,
+        });
+        return {
+          ...job,
+          applicationCount,
+        };
+      }),
+    );
+    res.json(jobWithApplicationsCount);
+  } catch (err) {
+    res.status(500).json({
+      message: "Error for getting admin job" + err.message,
+    });
+  }
+};
+
 const getJobById = async (req, res) => {
   try {
+    const { userId } = req.query;
+    const job = await job
+      .findById(req.params.id)
+      .populate("company", "name companyName companyLogo");
+    if (!job) {
+      return res.status(404).json({
+        message: "job not found",
+      });
+    }
+
+    let applicationStatus = null;
+    if (userId) {
+      const application = await ApplicationModal.findOne({
+        job: job._id,
+        applicant: userId,
+      }).select("status");
+      if (application) {
+        applicationStatus = application.status;
+      }
+    }
+    res.json({
+      ...job.toObject(),
+      applicationStatus,
+    });
   } catch (err) {
     res.status(500).json({
       message: "Error for getting jobs with ID" + err.message,
@@ -115,14 +179,6 @@ const toggleCloseJob = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       message: "Error for closejobs" + err.message,
-    });
-  }
-};
-const getJobsAdmin = async (req, res) => {
-  try {
-  } catch (err) {
-    res.status(500).json({
-      message: "Error for getting admin job" + err.message,
     });
   }
 };
