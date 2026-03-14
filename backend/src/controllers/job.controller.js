@@ -182,6 +182,16 @@ const updateJob = async (req, res) => {
 };
 const deleteJob = async (req, res) => {
   try {
+    const job = await jobModal.findById(req.params.id);
+    if (!job) {
+      return res.status(403).json({
+        message: "Not authorized to delete this job",
+      });
+    }
+    await job.deleteOne();
+    res.json({
+      message: "job deleted successfully",
+    });
   } catch (err) {
     res.status(500).json({
       message: "Error for delete jobs" + err.message,
