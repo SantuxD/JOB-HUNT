@@ -1,9 +1,6 @@
 const jobModal = require("../models/Job.modals");
-const userModal = require("../models/User.modals");
 const ApplicationModal = require("../models/Application.modals");
 const savedJobModal = require("../models/SavedJob.modals");
-const jwt = require("jsonwebtoken");
-const ApplicationModals = require("../models/Application.modals");
 const JobModals = require("../models/Job.modals");
 
 const createJobs = async (req, res) => {
@@ -200,6 +197,23 @@ const deleteJob = async (req, res) => {
 };
 const toggleCloseJob = async (req, res) => {
   try {
+    const job = await jobModal.findById(req.params.id);
+    if (!job)
+      return res.status(404).json({
+        message: "Job not found",
+      });
+
+    if (job.company.toString() !== req.user._id.toString()) {
+      return res
+        .status(403)
+        .json({ message: "Not authorized to close this job" });
+    }
+
+    job.isClosed = !job.isClosed;
+    await job.save();
+    res.json({
+      message: "job marked as closed",
+    });
   } catch (err) {
     res.status(500).json({
       message: "Error for closejobs" + err.message,
