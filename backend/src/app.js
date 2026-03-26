@@ -5,6 +5,7 @@ const uploadRoutes = require("./routes/uploads.route");
 const userRoutes = require("./routes/user.routes");
 const jobRoutes = require("./routes/jobs.routes");
 const applicationRoutes = require("./routes/application.routes");
+const savedJobRoutes = require("./routes/savedJob.routes")
 
 const app = express();
 
@@ -24,5 +25,6 @@ app.use("/api/v1", uploadRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/application", applicationRoutes);
+app.use("/api/saved-jobs", savedJobRoutes)
 
 module.exports = app;
