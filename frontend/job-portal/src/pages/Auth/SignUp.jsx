@@ -16,7 +16,11 @@ import { useState } from "react";
 import { validateEmail } from "../../utils/helper";
 import { validatePassword } from "../../utils/helper";
 import { validateAvatar } from "../../utils/helper";
+import axiosInstance from "../../utils/axiosInstance";
+import { API_PATHS } from "../../utils/apiPath";
+import { useAuth } from "../../context/AuthContext";
 const SignUp = () => {
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -76,7 +80,7 @@ const SignUp = () => {
         setFormState((prevData) => ({
           ...prevData,
           error: {
-            ...prevState.error,
+            ...prevData.error,
             avatar: error,
           },
         }));
@@ -92,7 +96,7 @@ const SignUp = () => {
         setFormState((prev) => ({
           ...prev,
           avatarPreview: e.target.result,
-          errors: { ...prev.error, avatar: "" },
+          error: { ...prev.error, avatar: "" },
         }));
       };
       reader.readAsDataURL(file);
@@ -132,7 +136,39 @@ const SignUp = () => {
       loading: true,
     }));
     try {
-      // Simulate API call
+      const formPayload = new FormData();
+      formPayload.append("fullName", formData.fullName);
+      formPayload.append("email", formData.email);
+      formPayload.append("password", formData.password);
+      formPayload.append("role", formData.role);
+      formPayload.append("avatar", formData.avatar);
+
+      const response = await axiosInstance.post(
+        API_PATHS.AUTH.REGISTER,
+        formPayload,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
+      );
+      setFormState((prevState) => ({
+        ...prevState,
+        success: true,
+        loading: false,
+        error: {},
+      }));
+
+      const { token } = response.data;
+      if (token) {
+        login(response.data, token);
+      }
+
+      setTimeout(() => {
+        const role = response.data.role;
+        window.location.href =
+          role === "admin" ? "/admin/dashboard" : "/find-jobs";
+      }, 2000);
     } catch (error) {
       console.log("error", error);
       setFormState((prevState) => ({
@@ -232,7 +268,7 @@ const SignUp = () => {
                 placeholder="Enter your email"
                 className={`w-full pl-10 pr-4 py-3 rounded-lg border ${
                   formState.error.email ? "border-red-500" : "border-gray-300"
-                } focus:ring-2 focus:ring-blue-500 focus:boreder-transparent transition-colors`}
+                } focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors`}
               />
             </div>
             {formState.error.email && (
