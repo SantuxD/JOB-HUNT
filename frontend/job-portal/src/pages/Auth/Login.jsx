@@ -7,12 +7,17 @@ import {
   Loader,
   AlertCircle,
   CheckCircle,
+  User,
 } from "lucide-react";
 import { useState } from "react";
 import { validateEmail } from "../../utils/helper";
 import { validatePassword } from "../../utils/helper";
+import axiosInstance from "../../utils/axiosInstance";
+import { API_PATHS } from "../../utils/apiPath";
+import { useAuth } from "../../context/AuthContext";
 
 const Login = () => {
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -73,6 +78,29 @@ const Login = () => {
       loading: true,
     }));
     try {
+      const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
+        email: formData.email,
+        password: formData.password,
+        rememberMe: formData.rememberMe,
+      });
+
+      setFormState((prevState) => ({
+        ...prevState,
+        success: true,
+        loading: false,
+        error: {},
+      }));
+
+      const { token, role } = response.data;
+
+      if (token) {
+        login(response.data, token);
+      }
+
+      setTimeout(() => {
+        window.location.href =
+          role === "admin" ? "/admin/dashboard" : "/find-jobs";
+      }, 2000);
     } catch (error) {
       setFormState((prevState) => ({
         ...prevState,
@@ -122,7 +150,7 @@ const Login = () => {
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
             Login to Your Account
           </h2>
-          <p className="tetx-gray-600">
+          <p className="text-gray-600">
             Welcome back! Please enter your details.
           </p>
         </div>
@@ -136,7 +164,7 @@ const Login = () => {
               Email address
             </label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 tetx-gray-400 w-5 h-5" />
+              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="email"
                 id="email"
@@ -162,7 +190,7 @@ const Login = () => {
               Password
             </label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 tetx-gray-400 w-5 h-5" />
+              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type={formState.showpassword ? "text" : "password"}
                 id="password"
@@ -201,6 +229,7 @@ const Login = () => {
               <div className="bg-red-50 border border-red-200 rounded-lg p-3">
                 <p className="text-red-700 text-sm flex items-center">
                   <AlertCircle className="w-4 h-4 mr-2" />
+                  {formState.error.submit}
                 </p>
               </div>
             )}
@@ -208,6 +237,8 @@ const Login = () => {
               <div className="bg-green-50 border border-green-200 rounded-lg p-3">
                 <p className="text-green-700 text-sm flex items-center">
                   <CheckCircle className="w-5 h-5 text-green-500 inline-block mr-1" />
+                  Login successful! Redirecting...
+                  
                 </p>
               </div>
             )}
