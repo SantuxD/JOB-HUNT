@@ -159,9 +159,9 @@ const SignUp = () => {
         error: {},
       }));
 
-      const { token } = response.data;
+      const { token, ...userData } = response.data;
       if (token) {
-        login(response.data, token);
+        login(userData, token);
       }
 
       setTimeout(() => {
