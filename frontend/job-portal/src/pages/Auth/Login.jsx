@@ -99,7 +99,7 @@ const Login = () => {
 
       setTimeout(() => {
         window.location.href =
-          role === "admin" ? "/admin/dashboard" : "/find-jobs";
+          role === "admin" ? "/admin-dashboard" : "/find-jobs";
       }, 2000);
     } catch (error) {
       setFormState((prevState) => ({
@@ -112,7 +112,6 @@ const Login = () => {
         loading: false,
       }));
     }
-    // Simulate API call
   };
 
   if (formState.success) {
@@ -238,7 +237,7 @@ const Login = () => {
                 <p className="text-green-700 text-sm flex items-center">
                   <CheckCircle className="w-5 h-5 text-green-500 inline-block mr-1" />
                   Login successful! Redirecting...
-                  
+
                 </p>
               </div>
             )}
