@@ -18,11 +18,12 @@ import ManageJobs from "./pages/Admin/ManageJobs";
 import ApplicationViewer from "./pages/Admin/ApplicationViewer";
 import CompanyProfilePage from "./pages/Admin/CompanyProfilePage";
 import ProtectedRoute from "./routes/ProtectedRoute";
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
   return (
     <>
-      <div>
+      <AuthProvider>
         <Router>
           <Routes>
             <Route path="/" element={<LandingPage />} />
@@ -52,7 +53,7 @@ function App() {
             },
           }}
         />
-      </div>
+      </AuthProvider>
     </>
   );
 }
