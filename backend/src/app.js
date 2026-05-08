@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 const authRoutes = require("../src/routes/auth.route");
 const uploadRoutes = require("./routes/uploads.route");
 const userRoutes = require("./routes/user.routes");
@@ -9,6 +10,7 @@ const savedJobRoutes = require("./routes/savedJob.routes")
 const analyticsRoutes = require("./routes/analytics.route")
 
 const app = express();
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 app.use(
   cors({
