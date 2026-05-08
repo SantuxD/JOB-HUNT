@@ -44,7 +44,7 @@ const getEmployerAnalytics = async (req, res) => {
 
     const activeJobsLast7 = await jobModal.countDocuments({
       company: companyId,
-      createdAt: { $gte: prev7Days, $lt: now },
+      createdAt: { $gte: last7days, $lt: now },
     });
 
     const activeJobsPrev7 = await jobModal.countDocuments({
@@ -68,7 +68,7 @@ const getEmployerAnalytics = async (req, res) => {
 
     const hiredLast7 = await applicationModal.countDocuments({
       job: { $in: jobIds },
-      status: "Accepetd",
+      status: "Accepted",
       createdAt: { $gte: last7days, $lte: now },
     });
 
