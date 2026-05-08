@@ -19,6 +19,11 @@ const register = async (req, res) => {
       resume,
     } = req.body;
 
+    let avatarUrl = req.body.avatar || null;
+    if (req.file) {
+      avatarUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+    }
+
     console.log("Email from body:", req.body.email);
 
     if (!fullName || !email || !password) {
@@ -38,7 +43,7 @@ const register = async (req, res) => {
       email,
       password,
       role,
-      avatar,
+      avatar: avatarUrl,
       companyName,
       companyDescription,
       companyLogo,
