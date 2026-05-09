@@ -1,9 +1,11 @@
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import { Briefcase, Building2, LogOut, Menu, X } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { NAVIGATION_MENU } from "../../utils/data";
-const DashboardLayout = ({ activeMenu }) => {
+import ProfileDropdown from "./ProfileDropdown";
+
+const DashboardLayout = ({ children, activeMenu }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -77,14 +79,15 @@ const DashboardLayout = ({ activeMenu }) => {
   return (
     <div className="flex h-screen bg-gray-50">
       <div
-        className={`fixed inset-y-0 left-0 z-50 transition-transform duration-300 transform ${isMobile
+        className={`fixed inset-y-0 left-0 z-50 transition-transform duration-300 transform ${
+          isMobile
             ? sidebarOpen
               ? "translate-x-0"
               : "-translate-x-full"
             : "translate-x-0"
-          } ${sidebarCollapse ? "w-20" : "w-64"} bg-white border-r border-gray-200 shadow-lg`}
+        } ${sidebarCollapse ? "w-16" : "w-64"} bg-white border-r border-gray-200 shadow-lg`}
       >
-        <div className="flex items-center h-16 border-b border-gray-200 pl-6">
+        <div className="flex items-center h-16 border-b border-gray-200 px-6 justify-between">
           {!sidebarCollapse ? (
             <Link className="flex items-center space-x-3" to="/">
               <div className="h-8 w-8 bg-linear-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center">
@@ -97,6 +100,11 @@ const DashboardLayout = ({ activeMenu }) => {
               <Building2 className="w-5 h-5 text-white" />
             </div>
           )}
+          {/* {isMobile && (
+            <button onClick={() => setSidebarOpen(false)} className="text-gray-500 hover:text-gray-700 ml-auto -mr-2 p-2">
+              <X className="w-6 h-6" />
+            </button>
+          )} */}
         </div>
 
         <nav className="p-4 space-y-2">
@@ -105,7 +113,7 @@ const DashboardLayout = ({ activeMenu }) => {
               key={item.id}
               item={item}
               isActive={activeNavItem === item.id}
-              onClick={() => handleNavigation}
+              onClick={handleNavigation}
               collapsed={sidebarCollapse}
             />
           ))}
@@ -120,6 +128,58 @@ const DashboardLayout = ({ activeMenu }) => {
             {!sidebarCollapse && <span className="ml-3">Logout</span>}
           </button>
         </div>
+      </div>
+      {isMobile && sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black z-40 bg-opacity-25 backdrop-blur-sm"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+      <div
+        className={`flex-1 flex flex-col transition-all duration-300 ${isMobile ? "ml-0" : sidebarCollapse ? "ml-16" : "ml-64"}`}
+      >
+        <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 h-16 flex items-center justify-between px-6 sticky top-0 z-30">
+          <div className="flex items-center space-x-4">
+            {isMobile && (
+              <button
+                onClick={toggleSidebar}
+                className="p-2 rounded-xl hover:bg-gray-100 transition-colors duration-200"
+              >
+                {sidebarOpen ? (
+                  <X className="h-5 w-5 text-gray-600" />
+                ) : (
+                  <Menu className="h-5 w-5 text-gray-600" />
+                )}
+              </button>
+            )}
+
+            <div>
+              <h1 className="text-base font-semi-bold text-gray-900">
+                Welcome back!
+              </h1>
+              <p className="text-sm text-gray-500 hidden sm:block">
+                Here's what's happening with your jobs today
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-3">
+            <ProfileDropdown
+              isOpen={profileDropdownOpen}
+              onToggle={(e) => {
+                e.stopPropagation();
+                setProfileDropdownOpen(!profileDropdownOpen);
+              }}
+              avatar={user?.avatar || ""}
+              companyName={
+                user?.fullName || user?.name || user?.companyName || ""
+              }
+              email={user?.email || ""}
+              onLogout={logout}
+            />
+          </div>
+        </header>
+        <main className="flex-1 overflow-auto p-6">{children}</main>
       </div>
     </div>
   );
