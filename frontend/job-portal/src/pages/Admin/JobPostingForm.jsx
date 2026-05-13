@@ -3,6 +3,7 @@ import DashboardLayout from "../../components/layout/DashboardLayout"
 import { AlertCircle, Briefcase, DollarSign, Eye, MapPin, Send, Users } from "lucide-react"
 import { API_PATHS } from "../../utils/apiPath"
 import { useLocation, useNavigate } from "react-router-dom"
+import InputField from "../../components/inputs/InpuField"
 
 
 const JobPostingForm = () => {
@@ -30,13 +31,45 @@ const JobPostingForm = () => {
   const validateFrom = (formData) => {
     const errors = {}
     return errors;
-  } 
+  }
   const isFormValid = () => {
     const validationErrors = validateFrom(formData);
     return Object.keys(validationErrors).length === 0;
   }
   return (
-    <DashboardLayout activeMenu='post-job'>JobPostingForm</DashboardLayout>
+    <DashboardLayout activeMenu='post-job'>
+      <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50/30 to-purple-50/20 py-8 px-4 sm:px-6 lg:px-8 ">
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-white shadow-xl rounded-2xl p-6">
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h2 className="text-xl font-bold bg-linear-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">Post a new Job</h2>
+                <p className="text-sm text-gray-600 mt-1">Fill out the form below to create your job posting</p>
+              </div>
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => setIsPreview(true)}
+                  disabled={!isFormValid()}
+                  className="group flex items-center space-x-2 px-6 py-3 text-sm font-medium text-gray-600 hover:text-white bg-white/50 hover:bg-linear-to-r hover:from-blue-500 hover:to-blue-600 border border-gray-200 hover:border-transparent rounded-xl transition-all duration-300 shadow-gray-100 hover:shadow-xl transform hover:-translate-y-0.5"
+                >
+                  <Eye className="h-4 w-4 transition-transform group-hover:-translate-x-1:" />
+                  <span>Preview</span>
+                </button>
+              </div>
+            </div>
+            <div className="space-y-6">
+              <InputField
+                label="Job Title"
+                id="jobTitle"
+                placeholder="e.g., Senior Frontend Developer"
+                value={formData.jobTitle}
+                required icon={Briefcase}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </DashboardLayout>
   )
 }
 
