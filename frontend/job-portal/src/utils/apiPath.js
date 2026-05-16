@@ -14,11 +14,10 @@ export const API_PATHS = {
   },
 
   JOBS: {
-    GET_ALL_JOBS: "/api/jobs",
+    GET_ALL_JOBS: "/api/jobs/get-jobs",
     GET_JOB_BY_ID: (id) => `/api/jobs/${id}`,
-    POST_JOB: "/api/jobs",
+    POST_JOB: "/api/jobs/create-jobs",
     GET_JOBS_ADMIN: "/api/jobs/get-jobs-admin",
-    GET_JOB_BY_ID: (id) => `/api/jobs/${id}`,
     UPDATE_JOB: (id) => `/api/jobs/${id}`,
     TOGGLE_CLOSE_JOB: (id) => `/api/jobs/${id}/toggle-close`,
     DELETE_JOB: (id) => `/api/jobs/${id}`,
