@@ -2,12 +2,17 @@ import { useState, useEffect } from "react";
 import { Briefcase, Building2, LogOut, Menu, X } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { NAVIGATION_MENU } from "../../utils/data";
+import { NAVIGATION_MENU, JOBSEEKER_NAVIGATION_MENU } from "../../utils/data";
 import ProfileDropdown from "./ProfileDropdown";
 
 const DashboardLayout = ({ children, activeMenu }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const menuItems = user
+    ? user.role === "admin"
+      ? NAVIGATION_MENU
+      : JOBSEEKER_NAVIGATION_MENU
+    : JOBSEEKER_NAVIGATION_MENU.filter((item) => item.id === "find-jobs");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeNavItem, setActiveNavItem] = useState(activeMenu || "dashboard");
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
@@ -108,7 +113,7 @@ const DashboardLayout = ({ children, activeMenu }) => {
         </div>
 
         <nav className="p-4 space-y-2">
-          {NAVIGATION_MENU.map((item) => (
+          {menuItems.map((item) => (
             <NavigationItem
               key={item.id}
               item={item}
@@ -119,15 +124,17 @@ const DashboardLayout = ({ children, activeMenu }) => {
           ))}
         </nav>
 
-        <div className="absolute bottom-4 left-4 right-4">
-          <button
-            className="w-full flex items-center px-3 py-2.5 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200  "
-            onClick={logout}
-          >
-            <LogOut className="w-5 h-5 shrink-0 text-gray-500" />
-            {!sidebarCollapse && <span className="ml-3">Logout</span>}
-          </button>
-        </div>
+        {user && (
+          <div className="absolute bottom-4 left-4 right-4">
+            <button
+              className="w-full flex items-center px-3 py-2.5 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200  "
+              onClick={logout}
+            >
+              <LogOut className="w-5 h-5 shrink-0 text-gray-500" />
+              {!sidebarCollapse && <span className="ml-3">Logout</span>}
+            </button>
+          </div>
+        )}
       </div>
       {isMobile && sidebarOpen && (
         <div
@@ -155,28 +162,46 @@ const DashboardLayout = ({ children, activeMenu }) => {
 
             <div>
               <h1 className="text-base font-semi-bold text-gray-900">
-                Welcome back!
-              </h1>
-              <p className="text-sm text-gray-500 hidden sm:block">
-                Here's what's happening with your jobs today
-              </p>
+                    Welcome back!
+                  </h1>
+                  <p className="text-sm text-gray-500 hidden sm:block">
+                    Here's what's happening with your jobs today
+                  </p>
             </div>
           </div>
 
           <div className="flex items-center space-x-3">
-            <ProfileDropdown
-              isOpen={profileDropdownOpen}
-              onToggle={(e) => {
-                e.stopPropagation();
-                setProfileDropdownOpen(!profileDropdownOpen);
-              }}
-              avatar={user?.avatar || ""}
-              companyName={
-                user?.fullName || user?.name || user?.companyName || ""
-              }
-              email={user?.email || ""}
-              onLogout={logout}
-            />
+            {user ? (
+              <ProfileDropdown
+                isOpen={profileDropdownOpen}
+                onToggle={(e) => {
+                  e.stopPropagation();
+                  setProfileDropdownOpen(!profileDropdownOpen);
+                }}
+                avatar={user?.avatar || ""}
+                companyName={
+                  user?.fullName || user?.name || user?.companyName || ""
+                }
+                email={user?.email || ""}
+                onLogout={logout}
+                userRole={user?.role}
+              />
+            ) : (
+              <div className="flex items-center space-x-2.5">
+                <button
+                  onClick={() => navigate("/login")}
+                  className="px-4 py-2 text-sm font-semibold text-gray-650 hover:text-blue-600 bg-white hover:bg-blue-50/40 border border-gray-155 hover:border-blue-150 rounded-xl transition-all duration-200 shadow-xs cursor-pointer"
+                >
+                  Sign In
+                </button>
+                <button
+                  onClick={() => navigate("/signup")}
+                  className="px-5 py-2 text-sm font-bold text-white bg-linear-to-r from-blue-600 to-indigo-650 hover:from-blue-700 hover:to-indigo-700 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 cursor-pointer"
+                >
+                  Register
+                </button>
+              </div>
+            )}
           </div>
         </header>
         <main className="flex-1 overflow-auto p-6">{children}</main>
