@@ -8,6 +8,7 @@ const ProfileDropdown = ({
   companyName,
   email,
   onLogout,
+  userRole,
 }) => {
   const navigate = useNavigate();
   return (
@@ -32,7 +33,9 @@ const ProfileDropdown = ({
 
         <div className="hidden sm:block text-left">
           <p className="text-sm font-medium text-gray-900 ">{companyName}</p>
-          <p className="text-xs text-gary-500">Admin</p>
+          <p className="text-xs text-gray-500 capitalize">
+            {userRole === "jobseeker" ? "Job Seeker" : "Admin"}
+          </p>
         </div>
 
         <ChevronDown className="h-4 w-4 text-gray-400" />
@@ -46,7 +49,7 @@ const ProfileDropdown = ({
           <a
             onClick={() =>
               navigate(
-                userRole === "jobseeker" ? "/profile" : "/company-profile",
+                userRole === "jobseeker" ? "/user-profile" : "/company-profile",
               )
             }
             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
@@ -55,7 +58,7 @@ const ProfileDropdown = ({
           </a>
           <div className="border-t border-gray-100 mt-2 pt-2">
             <a
-              herf="#"
+              href="#"
               onClick={onLogout}
               className="block px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
             >
