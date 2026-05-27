@@ -122,7 +122,7 @@ const AdminDashboard = () => {
                       key={index}
                       applicant={data?.applicant || ""}
                       position={data?.job?.title || ""}
-                      time={moment(data?.updateAt).fromNow()}
+                      time={moment(data?.createdAt || data?.updatedAt).fromNow()}
                     />
                   ))}
               </div>
@@ -139,7 +139,7 @@ const AdminDashboard = () => {
                   title: "Post New Job",
                   icon: Plus,
                   color: "bg-blue-50 text-blue-700",
-                  path: "/post-job",
+                  path: "/post-jobs",
                 },
                 {
                   title: "Review Applications",
