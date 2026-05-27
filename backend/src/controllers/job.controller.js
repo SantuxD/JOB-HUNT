@@ -49,7 +49,7 @@ const getJobs = async (req, res) => {
   try {
     const jobs = await jobModal
       .find(query)
-      .populate("company", "name companyName, companyLogo");
+      .populate("company", "name companyName companyLogo");
     let savedJobIds = [];
     let appliedJobStatusMap = {};
 
@@ -129,7 +129,7 @@ const getJobById = async (req, res) => {
     const { userId } = req.query;
     const job = await jobModal
       .findById(req.params.id)
-      .populate("company", "name companyName companyLogo");
+      .populate("company", "name companyName companyLogo companyDescription");
     if (!job) {
       return res.status(404).json({
         message: "job not found",
@@ -137,18 +137,21 @@ const getJobById = async (req, res) => {
     }
 
     let applicationStatus = null;
+    let appliedAt = null;
     if (userId) {
       const application = await ApplicationModal.findOne({
         job: job._id,
         applicant: userId,
-      }).select("status");
+      }).select("status createdAt");
       if (application) {
         applicationStatus = application.status;
+        appliedAt = application.createdAt;
       }
     }
     res.json({
       ...job.toObject(),
       applicationStatus,
+      appliedAt,
     });
   } catch (err) {
     res.status(500).json({
