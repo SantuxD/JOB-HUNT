@@ -18,22 +18,24 @@ const updateProfile = async (req, res) => {
       return res.status(404).json({
         message: "User not found",
       });
-    user.fullName = fullName || user.fullName;
-    user.avatar = avatar || user.avatar;
-    user.resume = resume || user.resume;
+    user.fullName = fullName !== undefined ? fullName : user.fullName;
+    user.avatar = avatar !== undefined ? avatar : user.avatar;
+    user.resume = resume !== undefined ? resume : user.resume;
 
     if (user.role === "admin") {
-      user.companyName = companyName || user.companyName;
-      user.companyDescription = companyDescription || user.companyDescription;
-      user.companyLogo = companyLogo || user.companyLogo;
+      user.companyName = companyName !== undefined ? companyName : user.companyName;
+      user.companyDescription = companyDescription !== undefined ? companyDescription : user.companyDescription;
+      user.companyLogo = companyLogo !== undefined ? companyLogo : user.companyLogo;
     }
     await user.save();
     res.json({
       _id: user._id,
       fullName: user.fullName,
+      email: user.email,
       avatar: user.avatar,
       role: user.role,
       companyName: user.companyName,
+      companyDescription: user.companyDescription,
       companyLogo: user.companyLogo,
       resume: user.resume || "",
     });
