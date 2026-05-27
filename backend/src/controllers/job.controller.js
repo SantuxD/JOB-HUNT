@@ -7,7 +7,7 @@ const createJobs = async (req, res) => {
   try {
     if (req.user.role !== "admin") {
       return res.status(403).json({
-        message: "only admin can post the job" + err.message,
+        message: "only admin can post the job",
       });
     }
 
