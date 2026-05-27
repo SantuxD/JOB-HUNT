@@ -11,6 +11,8 @@ import {
   Building2,
   Briefcase,
   LayoutDashboard,
+  Bookmark,
+  User,
 } from "lucide-react";
 
 export const jobSeekerFeatures = [
@@ -72,6 +74,12 @@ export const NAVIGATION_MENU = [
   { id: "manage-jobs", name: "Manage Jobs", icon: Briefcase },
   { id: "post-jobs", name: "Post Job", icon: Plus },
   { id: "company-profile", name: "Company Profile", icon: Building2 },
+];
+
+export const JOBSEEKER_NAVIGATION_MENU = [
+  { id: "find-jobs", name: "Find Jobs", icon: Briefcase },
+  { id: "saved-jobs", name: "Saved Jobs", icon: Bookmark },
+  { id: "user-profile", name: "Profile", icon: User },
 ];
 
 export const CATEGORIES = [
