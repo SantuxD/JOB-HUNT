@@ -10,7 +10,7 @@ const applyToJob = async (req, res) => {
     }
     const existing = await applicationModal.findOne({
       job: req.params.jobId,
-      application: req.user._id,
+      applicant: req.user._id,
     });
 
     if (existing) {
@@ -57,7 +57,7 @@ const getApplicantsForJob = async (req, res) => {
     const application = await applicationModal
       .find({ job: req.params.jobId })
       .populate("job", "title location category type")
-      .populate("applicant", "name email avatar resume");
+      .populate("applicant", "fullName email avatar resume");
     res.json(application);
   } catch (err) {
     res.status(500).json({
@@ -70,7 +70,7 @@ const getApplicationById = async (req, res) => {
     const app = await applicationModal
       .findById(req.params.id)
       .populate("job", "title company")
-      .populate("applicant", "name email avatar resume");
+      .populate("applicant", "fullName email avatar resume");
     if (!app)
       return res.status(404).json({
         message: "Appliaction is not found",
