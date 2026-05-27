@@ -34,7 +34,7 @@ const saveJob = async (req, res) => {
 const unSaveJob = async (req, res) => {
   try {
     await savedJobModal.findOneAndDelete({
-      job: req.params.jobId,
+      job: req.params.id,
       jobseeker: req.user._id,
     });
     res.status(200).json({
