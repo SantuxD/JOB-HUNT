@@ -92,7 +92,7 @@ const getEmployerAnalytics = async (req, res) => {
       })
       .sort({ createdAt: -1 })
       .limit(5)
-      .populate("applicant", "name email avatar")
+      .populate("applicant", "fullName email avatar")
       .populate("job", "title");
 
     res.json({
