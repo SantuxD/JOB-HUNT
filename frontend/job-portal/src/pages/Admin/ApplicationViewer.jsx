@@ -247,7 +247,7 @@ const ApplicationViewer = () => {
     if (resumePath.startsWith("http://") || resumePath.startsWith("https://")) {
       return resumePath;
     }
-    return `http://localhost:8000/uploads/${resumePath}`;
+    return `https://job-hunt-1bmu.onrender.com/uploads/${resumePath}`;
   };
   const selectedJob = adminJobs.find((job) => job._id === selectedJobId);
   const totalCount = applications.length;
