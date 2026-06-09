@@ -6,16 +6,22 @@ const uploadRoutes = require("./routes/uploads.route");
 const userRoutes = require("./routes/user.routes");
 const jobRoutes = require("./routes/jobs.routes");
 const applicationRoutes = require("./routes/application.routes");
-const savedJobRoutes = require("./routes/savedJob.routes")
-const analyticsRoutes = require("./routes/analytics.route")
-
+const savedJobRoutes = require("./routes/savedJob.routes");
+const analyticsRoutes = require("./routes/analytics.route");
+const fs = require("fs");
 const app = express();
+
+const uploadDir = path.join(__dirname, "../uploads");
+
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 app.use(
   cors({
-    origin: ["https://job-hunt-one-alpha.vercel.app",
-                "http://localhost:5173"],
+    origin: ["https://job-hunt-one-alpha.vercel.app", "http://localhost:5173"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["content-type", "Authorization"],
   }),
@@ -30,6 +36,6 @@ app.use("/api/user", userRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/application", applicationRoutes);
 app.use("/api/saved-jobs", savedJobRoutes);
-app.use("/api/analytics", analyticsRoutes)
+app.use("/api/analytics", analyticsRoutes);
 
 module.exports = app;
