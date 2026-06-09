@@ -14,7 +14,7 @@ app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 app.use(
   cors({
-    origin: "*",
+    origin: "https://job-hunt-one-alpha.vercel.app",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["content-type", "Authorization"],
   }),
